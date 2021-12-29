@@ -9,15 +9,18 @@ jobs:
   upsert-comment:
     runs-on: ubuntu-20.04
     steps:
+      - uses: actions/checkout@v2
+      - uses: jwalton/gh-find-current-pr@v1
+        id: find_pr
       - name: "Check for comment"
         uses: peter-evans/find-comment@v1
         id: find_comment
         with:
-          issue-number: ${{ github.event.pull_request.number }}
+          issue-number: ${{ steps.find_pr.outputs.pr }}
           body-includes: simple example
       - name: "Post or update comment"
         uses: peter-evans/create-or-update-comment@v1
         with:
-          issue-number: ${{ github.event.pull_request.number }}
+          issue-number: ${{ steps.find_pr.outputs.pr }}
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           body: simple example (${{ steps.find_comment.outputs.comment-id }})
