@@ -1,0 +1,29 @@
+---
+name: "Upsert comment"
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  upsert-comment:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: "Check for comment"
+        uses: peter-evans/find-comment@v1
+        id: find_comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: "<!-- Automatic Comment -->"
+      - name: "Post or update comment"
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          body: |
+            <!-- Automatic Plan Comment -->
+            <details>
+              <summary>Click for more comment</summary>
+
+              More comment!
+            </details>
