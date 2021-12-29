@@ -14,16 +14,10 @@ jobs:
         id: find_comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          body-includes: "<!-- Automatic Comment -->"
+          body-includes: simple example
       - name: "Post or update comment"
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
-          body: |
-            <!-- Automatic Plan Comment -->
-            <details>
-              <summary>Click for more comment</summary>
-
-              More comment!
-            </details>
+          body: simple example (${{ steps.find_comment.outputs.comment-id }})
