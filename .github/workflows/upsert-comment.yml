@@ -12,11 +12,12 @@ jobs:
       - uses: actions/checkout@v2
       - uses: jwalton/gh-find-current-pr@v1
         id: find_pr
-      - name: "Check for comment"
+      - name: "Check for existing comment"
         uses: peter-evans/find-comment@v1
         id: find_comment
         with:
           issue-number: ${{ steps.find_pr.outputs.pr }}
+          comment-author: 'github-actions[bot]'
           body-includes: <!-- Automatic Comment -->
       - name: "Post or update comment"
         uses: peter-evans/create-or-update-comment@v1
