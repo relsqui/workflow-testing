@@ -23,4 +23,5 @@ jobs:
         with:
           issue-number: ${{ steps.find_pr.outputs.pr }}
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          edit-mode: replace
           body: simple example (${{ steps.find_comment.outputs.comment-id }})
