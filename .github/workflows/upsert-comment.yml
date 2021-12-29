@@ -17,11 +17,20 @@ jobs:
         id: find_comment
         with:
           issue-number: ${{ steps.find_pr.outputs.pr }}
-          body-includes: simple example
+          body-includes: <!-- Automatic Comment -->
       - name: "Post or update comment"
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ steps.find_pr.outputs.pr }}
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           edit-mode: replace
-          body: simple example (${{ steps.find_comment.outputs.comment-id }})
+          body: |
+            <!-- Automatic Comment -->
+            <details>
+              <summary>Click for info about this automatic comment.</summary>
+
+              ```
+              Pull Request: ${{ steps.find_pr.outputs.pr }}
+              Comment ID: ${{ steps.find_comment.outputs.comment-id }}
+              ```
+            </details>
