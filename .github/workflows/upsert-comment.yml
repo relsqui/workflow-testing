@@ -10,6 +10,12 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+      - name: first step
+        run: echo "::set-output name=keysmash::asldfkij"
+      - name: second step
+        run: echo "::set-output name=keysmash::wfuensdk"
+      - name: third step
+        run: echo "::set-output name=keysmash::cmhfekjh"
       - uses: jwalton/gh-find-current-pr@v1
         id: find_pr
       - name: "Check for existing comment"
@@ -33,5 +39,6 @@ jobs:
               ```
               Pull Request: ${{ steps.find_pr.outputs.pr }}
               Comment ID: ${{ steps.find_comment.outputs.comment-id }}
+              Steps: ${{ steps }}
               ```
             </details>
