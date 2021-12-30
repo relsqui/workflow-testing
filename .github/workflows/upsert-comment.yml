@@ -39,6 +39,6 @@ jobs:
               ```
               Pull Request: ${{ steps.find_pr.outputs.pr }}
               Comment ID: ${{ steps.find_comment.outputs.comment-id }}
-              Steps: ${{ join(steps) }}
+              Steps: ${{ join(steps.*.name) }}
               ```
             </details>
