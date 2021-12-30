@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        color: [red, blue, green]
-        animal: [bear, frog, rabbit]
+        color: [brown, black]
+        animal: [bear, snake]
     steps:
       - name: '${{ matrix.color }}-${{ matrix.animal }}'
-        run: echo "::set-output name=exclamation::Look, a ${{ matrix.color }} ${{ matrix.animal }}!!"
+        run: echo "::set-output name=exclamation::Look out, a ${{ matrix.color }} ${{ matrix.animal }}!"
   upsert-comment:
     runs-on: ubuntu-20.04
     needs: collect-output
@@ -43,6 +43,6 @@ jobs:
               ```
               Pull Request: ${{ steps.find_pr.outputs.pr }}
               Comment ID: ${{ steps.find_comment.outputs.comment-id }}
-              Outputs: ${{ toJson(needs.collect-output.*.outputs) }}
+              Outputs: ${{ toJson(needs.collect-output) }}
               ```
             </details>
