@@ -14,7 +14,7 @@ jobs:
         animal: [bear, frog, rabbit]
     steps:
       - name: set output
-        id: ${{ matrix.color }}-${{ matrix.animal }}
+        id: '${{ matrix.color }}-${{ matrix.animal }}'
         run: echo "::set-output name=exclamation::Look, a ${{ matrix.color }} ${{ matrix.animal }}!!"
   upsert-comment:
     runs-on: ubuntu-20.04
@@ -38,7 +38,7 @@ jobs:
           edit-mode: replace
           body: |
             <!-- Automatic Comment -->
-            <details>
+            <details open>
               <summary>Click for info about this automatic comment.</summary>
 
               ```
