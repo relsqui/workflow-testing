@@ -29,11 +29,11 @@ jobs:
     steps:
       - name: aggregate output
         run: |
-          MATRIX=${{ needs.make-matrix.outputs.matrix }}
+          MATRIX='${{ needs.make-matrix.outputs.matrix }}'
           echo "$MATRIX" | jq
   upsert-comment:
     runs-on: ubuntu-20.04
-    needs: generate-output
+    needs: [generate-output, aggregate-output]
     steps:
       - uses: actions/checkout@v2
       - uses: jwalton/gh-find-current-pr@v1
