@@ -12,6 +12,8 @@ jobs:
       matrix:
         color: [brown, black]
         animal: [bear, snake]
+    outputs:
+      ${{ matrix.color }}-${{ matrix.animal }}: steps.${{ matrix.color }}-${{ matrix.animal }}.outputs
     steps:
       - name: '${{ matrix.color }}-${{ matrix.animal }}'
         run: echo "::set-output name=exclamation::Look out, a ${{ matrix.color }} ${{ matrix.animal }}!"
