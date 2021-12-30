@@ -51,6 +51,6 @@ jobs:
               ```
               Pull Request: ${{ steps.find_pr.outputs.pr }}
               Comment ID: ${{ steps.find_comment.outputs.comment-id }}
-              Outputs: ${{ needs.collect-output }}
+              Outputs: ${{ needs.collect-output.outputs.all }}
               ```
             </details>
