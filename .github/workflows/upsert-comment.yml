@@ -6,19 +6,21 @@ on:
   push:
 
 jobs:
+  collect-output:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        color: [red, blue, green]
+        animal: [bear, frog, rabbit]
+    steps:
+      - name: set output
+        id: ${{ matrix.color }}-${{ matrix.animal }}
+        run: echo "::set-output name=exclamation::Look, a ${{ matrix.color }} ${{ matrix.animal }}!!"
   upsert-comment:
     runs-on: ubuntu-20.04
+    needs: collect-output
     steps:
       - uses: actions/checkout@v2
-      - name: first step
-        id: first
-        run: echo "::set-output name=keysmash::asldfkij"
-      - name: second step
-        id: second
-        run: echo "::set-output name=keysmash::wfuensdk"
-      - name: third step
-        id: third
-        run: echo "::set-output name=keysmash::cmhfekjh"
       - uses: jwalton/gh-find-current-pr@v1
         id: find_pr
       - name: "Check for existing comment"
@@ -42,6 +44,6 @@ jobs:
               ```
               Pull Request: ${{ steps.find_pr.outputs.pr }}
               Comment ID: ${{ steps.find_comment.outputs.comment-id }}
-              Steps: ${{ toJson(steps) }}
+              Outputs: ${{ toJson(needs.collect-output.outputs.*) }}
               ```
             </details>
