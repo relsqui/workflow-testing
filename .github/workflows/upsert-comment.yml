@@ -19,33 +19,30 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.make-matrix.outputs.matrix)}}
     outputs:
-      all: ${{ toJson(steps) }}
+      all: ${{ toJson(steps.*.outputs.exclamation) }}
     steps:
-      - name: '${{ matrix.color }}-${{ matrix.animal }}'
+      - name: ${{ matrix.color }}-${{ matrix.animal }}
         run: echo "::set-output name=exclamation::Look out, a ${{ matrix.color }} ${{ matrix.animal }}!"
-  aggregate-output:
-    runs-on: ubuntu-20.04
-    needs: [make-matrix, generate-output]
-    steps:
-      - name: aggregate output
-        run: |
-          MATRIX='${{ needs.make-matrix.outputs.matrix }}'
-          echo "$MATRIX" | jq
   upsert-comment:
     runs-on: ubuntu-20.04
-    needs: [generate-output, aggregate-output]
+    needs: [make-matrix, generate-output]
     steps:
       - uses: actions/checkout@v2
       - uses: jwalton/gh-find-current-pr@v1
         id: find_pr
-      - name: "Check for existing comment"
+      - name: Check for existing comment
         uses: peter-evans/find-comment@v1
         id: find_comment
         with:
           issue-number: ${{ steps.find_pr.outputs.pr }}
           comment-author: 'github-actions[bot]'
           body-includes: <!-- Automatic Comment -->
-      - name: "Post or update comment"
+      - name: Build comment body
+        id: comment-body
+        run: |
+          MATRIX='${{ needs.make-matrix.outputs.matrix }}'
+          echo "$MATRIX" | scripts/aggregate-output.py
+      - name: Post or update comment
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ steps.find_pr.outputs.pr }}
