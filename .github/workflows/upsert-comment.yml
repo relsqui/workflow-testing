@@ -6,14 +6,17 @@ on:
   push:
 
 jobs:
+  make-matrix:
+    runs-on: ubuntu-latest # doesn't matter, 'cause we're not doing anything
+    outputs:
+      matrix: ${{ '{"include":[{"animal":"bear","color":"black"},{"animal":"bear","color":"brown"},{"animal":"snake","color":"black"}]}' }}
   collect-output:
     runs-on: ubuntu-20.04
+    needs: make-matrix
     strategy:
-      matrix:
-        color: [brown, black]
-        animal: [bear, snake]
+      matrix: ${{ fromJson(needs.make-matrix.outputs.matrix)}}
     outputs:
-      all: ${{ toJson(steps.*.outputs) }}
+      all: ${{ toJson(steps) }}
     steps:
       - name: '${{ matrix.color }}-${{ matrix.animal }}'
         run: echo "::set-output name=exclamation::Look out, a ${{ matrix.color }} ${{ matrix.animal }}!"
