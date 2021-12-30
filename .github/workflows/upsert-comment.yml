@@ -7,13 +7,13 @@ on:
 
 jobs:
   make-matrix:
-    runs-on: ubuntu-latest # doesn't matter, 'cause we're not doing anything
+    runs-on: ubuntu-20.04
     outputs:
       matrix: ${{ '{"include":[{"animal":"bear","color":"black"},{"animal":"bear","color":"brown"},{"animal":"snake","color":"black"}]}' }}
     steps:
       - name: do nothing
         run: echo "jobs are required to do at least one thing"
-  collect-output:
+  generate-output:
     runs-on: ubuntu-20.04
     needs: make-matrix
     strategy:
@@ -23,6 +23,14 @@ jobs:
     steps:
       - name: '${{ matrix.color }}-${{ matrix.animal }}'
         run: echo "::set-output name=exclamation::Look out, a ${{ matrix.color }} ${{ matrix.animal }}!"
+  aggregate-output:
+    runs-on: ubuntu-20.04
+    needs: [make-matrix, generate-output]
+    steps:
+      - name: aggregate output
+        run: |
+          MATRIX="${{ needs.make-matrix.outputs.matrix }}"
+          echo "$MATRIX" | jq
   upsert-comment:
     runs-on: ubuntu-20.04
     needs: collect-output
