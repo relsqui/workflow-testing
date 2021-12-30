@@ -41,6 +41,8 @@ jobs:
         id: comment-body
         run: |
           MATRIX='${{ needs.make-matrix.outputs.matrix }}'
+          pwd
+          ls
           echo "$MATRIX" | scripts/aggregate-output.py
       - name: Post or update comment
         uses: peter-evans/create-or-update-comment@v1
