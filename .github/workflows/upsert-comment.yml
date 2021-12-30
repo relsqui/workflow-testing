@@ -33,7 +33,7 @@ jobs:
           echo "$MATRIX" | jq
   upsert-comment:
     runs-on: ubuntu-20.04
-    needs: collect-output
+    needs: generate-output
     steps:
       - uses: actions/checkout@v2
       - uses: jwalton/gh-find-current-pr@v1
@@ -59,6 +59,6 @@ jobs:
               ```
               Pull Request: ${{ steps.find_pr.outputs.pr }}
               Comment ID: ${{ steps.find_comment.outputs.comment-id }}
-              Outputs: ${{ needs.collect-output.outputs.all }}
+              Outputs: ${{ needs.generate-output.outputs.all }}
               ```
             </details>
