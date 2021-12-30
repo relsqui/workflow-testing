@@ -43,6 +43,6 @@ jobs:
               ```
               Pull Request: ${{ steps.find_pr.outputs.pr }}
               Comment ID: ${{ steps.find_comment.outputs.comment-id }}
-              Outputs: ${{ toJson(needs.collect-output.outputs.*) }}
+              Outputs: ${{ toJson(needs.collect-output.*.outputs) }}
               ```
             </details>
