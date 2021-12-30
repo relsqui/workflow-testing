@@ -12,6 +12,7 @@ jobs:
       matrix: ${{ '{"include":[{"animal":"bear","color":"black"},{"animal":"bear","color":"brown"},{"animal":"snake","color":"black"}]}' }}
     steps:
       - name: do nothing
+      - run: echo "jobs are required to do at least one thing"
   collect-output:
     runs-on: ubuntu-20.04
     needs: make-matrix
