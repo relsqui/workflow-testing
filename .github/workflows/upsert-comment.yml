@@ -22,6 +22,7 @@ jobs:
       all: ${{ toJson(steps.*.outputs.exclamation) }}
     steps:
       - name: ${{ matrix.color }}-${{ matrix.animal }}
+        id: ${{ matrix.color }}-${{ matrix.animal }}
         run: echo "::set-output name=exclamation::Look out, a ${{ matrix.color }} ${{ matrix.animal }}!"
   upsert-comment:
     runs-on: ubuntu-20.04
@@ -41,9 +42,7 @@ jobs:
         id: comment-body
         run: |
           MATRIX='${{ needs.make-matrix.outputs.matrix }}'
-          pwd
-          ls
-          echo "$MATRIX" | scripts/aggregate-output.py
+          echo "$MATRIX" | scripts/get-job-names.py
       - name: Post or update comment
         uses: peter-evans/create-or-update-comment@v1
         with:
