@@ -41,8 +41,9 @@ jobs:
         id: comment-body
         run: |
           MATRIX='${{ needs.make-matrix.outputs.matrix }}'
+          echo $GITHUB_ENV
           cat $GITHUB_ENV
-          echo "$MATRIX" | scripts/get-job-names.py
+          echo "$MATRIX" | scripts/get-output-variables.py
       - name: Post or update comment
         uses: peter-evans/create-or-update-comment@v1
         with:
