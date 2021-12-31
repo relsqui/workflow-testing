@@ -47,6 +47,11 @@ jobs:
           MATRIX='${{ needs.make-matrix.outputs.matrix }}'
           echo "$MATRIX" | scripts/get-output-variables.py
           ls -lR
+          OUTPUTS=$(cat outputs/**/*.out)
+          OUTPUTS="${OUTPUTS//'%'/'%25'}"
+          OUTPUTS="${OUTPUTS//$'\n'/'%0A'}"
+          OUTPUTS="${OUTPUTS//$'\r'/'%0D'}"
+          echo "::set-output name=comment-body::${OUTPUTS}"
       - name: Check for existing comment
         uses: peter-evans/find-comment@v1
         id: find_comment
@@ -65,8 +70,10 @@ jobs:
             <details open>
               <summary>Click for info about this automatic comment.</summary>
 
-              ```
               Pull Request: ${{ steps.find_pr.outputs.pr }}
               Comment ID: ${{ steps.find_comment.outputs.comment-id }}
+              Output:
+              ```
+              ${{steps.comment-body.outputs.comment-body}}
               ```
             </details>
