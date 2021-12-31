@@ -5,4 +5,4 @@ import sys
 
 matrix = json.load(sys.stdin)
 for job in matrix["include"]:
-    print(f"{job['color']}-{job['animal']}")
+    print(f"output_{job['color']}_{job['animal']}")

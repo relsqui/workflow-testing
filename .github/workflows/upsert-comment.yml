@@ -18,12 +18,11 @@ jobs:
     needs: make-matrix
     strategy:
       matrix: ${{ fromJson(needs.make-matrix.outputs.matrix)}}
-    outputs:
-      all: ${{ toJson(steps.*.outputs.exclamation) }}
     steps:
       - name: ${{ matrix.color }}-${{ matrix.animal }}
-        id: ${{ matrix.color }}-${{ matrix.animal }}
-        run: echo "::set-output name=exclamation::Look out, a ${{ matrix.color }} ${{ matrix.animal }}!"
+        run: |
+          output="Look out, a ${{ matrix.color }} ${{ matrix.animal }}!"
+          echo "output_${{ matrix.color }}_${{ matrix.animal }}=${output}" >> $GITHUB_ENV
   upsert-comment:
     runs-on: ubuntu-20.04
     needs: [make-matrix, generate-output]
@@ -42,6 +41,7 @@ jobs:
         id: comment-body
         run: |
           MATRIX='${{ needs.make-matrix.outputs.matrix }}'
+          cat $GITHUB_ENV
           echo "$MATRIX" | scripts/get-job-names.py
       - name: Post or update comment
         uses: peter-evans/create-or-update-comment@v1
@@ -57,6 +57,5 @@ jobs:
               ```
               Pull Request: ${{ steps.find_pr.outputs.pr }}
               Comment ID: ${{ steps.find_comment.outputs.comment-id }}
-              Outputs: ${{ needs.generate-output.outputs.all }}
               ```
             </details>
