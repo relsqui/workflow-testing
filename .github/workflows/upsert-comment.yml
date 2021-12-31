@@ -21,8 +21,11 @@ jobs:
     steps:
       - name: ${{ matrix.color }}-${{ matrix.animal }}
         run: |
+          set -x
           output="Look out, a ${{ matrix.color }} ${{ matrix.animal }}!"
           echo "output_${{ matrix.color }}_${{ matrix.animal }}=${output}" >> $GITHUB_ENV
+          echo $GITHUB_ENV
+          cat $GITHUB_ENV
   upsert-comment:
     runs-on: ubuntu-20.04
     needs: [make-matrix, generate-output]
@@ -40,6 +43,7 @@ jobs:
       - name: Build comment body
         id: comment-body
         run: |
+          set -x
           MATRIX='${{ needs.make-matrix.outputs.matrix }}'
           echo $GITHUB_ENV
           cat $GITHUB_ENV
