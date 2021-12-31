@@ -22,12 +22,12 @@ jobs:
       - name: Generate output
         run: |
           output="Look out, a ${{ matrix.color }} ${{ matrix.animal }}!"
-          echo "$output" > ${{ matrix.color }}-${{ matrix-animal }}.out
+          echo "$output" > ${{ matrix.color }}-${{ matrix.animal }}.out
       - name: Upload output
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.color }}-${{ matrix-animal }}
-          path: ${{ matrix.color }}-${{ matrix-animal }}.out
+          name: ${{ matrix.color }}-${{ matrix.animal }}
+          path: ${{ matrix.color }}-${{ matrix.animal }}.out
           retention-days: 1
   upsert-comment:
     runs-on: ubuntu-20.04
