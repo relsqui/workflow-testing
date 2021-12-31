@@ -25,7 +25,7 @@ jobs:
         id: matrix-job
         run: |
           output="Look out, a ${{ matrix.color }} ${{ matrix.animal }}!"
-          echo "::set-output name=${{ matrix.color }}_${{ matrix-animal }}::${output}"
+          echo "::set-output name=${{ matrix.color }}-${{ matrix.animal }}::${output}"
   upsert-comment:
     runs-on: ubuntu-20.04
     needs: [make-matrix, generate-output]
