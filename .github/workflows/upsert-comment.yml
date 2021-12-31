@@ -44,14 +44,18 @@ jobs:
       - name: Build comment body
         id: comment-body
         run: |
-          MATRIX='${{ needs.make-matrix.outputs.matrix }}'
-          echo "$MATRIX" | scripts/get-output-variables.py
           ls -lR
-          OUTPUTS=$(cat outputs/**/*.out)
-          OUTPUTS="${OUTPUTS//'%'/'%25'}"
-          OUTPUTS="${OUTPUTS//$'\n'/'%0A'}"
-          OUTPUTS="${OUTPUTS//$'\r'/'%0D'}"
-          echo "::set-output name=comment-body::${OUTPUTS}"
+          echo '${{ needs.make-matrix.outputs.matrix }}' | scripts/get-output-variables.py | while read job_name; do
+            # next step is to put this logic in the python script
+            echo "$job_name:" >> all_outputs
+            cat outputs/$job_name/$job_name.out >> all_outputs
+            echo >> all_outputs
+          done
+          comment_body=$(cat all_outputs)
+          comment_body="${comment_body//'%'/'%25'}"
+          comment_body="${comment_body//$'\n'/'%0A'}"
+          comment_body="${comment_body//$'\r'/'%0D'}"
+          echo "::set-output name=comment-body::${comment_body}"
       - name: Check for existing comment
         uses: peter-evans/find-comment@v1
         id: find_comment
