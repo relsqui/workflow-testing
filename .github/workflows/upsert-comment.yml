@@ -16,23 +16,35 @@ jobs:
   generate-output:
     runs-on: ubuntu-20.04
     needs: make-matrix
-    outputs:
-      all: ${{ toJson(steps.matrix-job.outputs.*) }}
     strategy:
       matrix: ${{ fromJson(needs.make-matrix.outputs.matrix)}}
     steps:
-      - name: ${{ matrix.color }}-${{ matrix.animal }}
-        id: matrix-job
+      - name: Generate output
         run: |
           output="Look out, a ${{ matrix.color }} ${{ matrix.animal }}!"
-          echo "::set-output name=${{ matrix.color }}-${{ matrix.animal }}::${output}"
+          echo "$output" > ${{ matrix.color }}-${{ matrix-animal }}.out
+      - name: Upload output
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.color }}-${{ matrix-animal }}
+          path: ${{ matrix.color }}-${{ matrix-animal }}.out
+          retention-days: 1
   upsert-comment:
     runs-on: ubuntu-20.04
     needs: [make-matrix, generate-output]
     steps:
       - uses: actions/checkout@v2
+      # if this workflow is triggered without a PR, it'll fail here and that's fine
       - uses: jwalton/gh-find-current-pr@v1
         id: find_pr
+      - name: Download matrix outputs
+        uses: actions/download-artifact@v2
+      - name: Build comment body
+        id: comment-body
+        run: |
+          MATRIX='${{ needs.make-matrix.outputs.matrix }}'
+          echo "$MATRIX" | scripts/get-output-variables.py
+          ls -lR
       - name: Check for existing comment
         uses: peter-evans/find-comment@v1
         id: find_comment
@@ -40,11 +52,6 @@ jobs:
           issue-number: ${{ steps.find_pr.outputs.pr }}
           comment-author: 'github-actions[bot]'
           body-includes: <!-- Automatic Comment -->
-      - name: Build comment body
-        id: comment-body
-        run: |
-          MATRIX='${{ needs.make-matrix.outputs.matrix }}'
-          echo "$MATRIX" | scripts/get-output-variables.py
       - name: Post or update comment
         uses: peter-evans/create-or-update-comment@v1
         with:
@@ -59,6 +66,5 @@ jobs:
               ```
               Pull Request: ${{ steps.find_pr.outputs.pr }}
               Comment ID: ${{ steps.find_comment.outputs.comment-id }}
-              Output: ${{ needs.generate-output.outputs.all }}
               ```
             </details>
