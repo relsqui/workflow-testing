@@ -11,21 +11,21 @@ jobs:
     outputs:
       matrix: '{"include":[{"animal":"bear","color":"black"},{"animal":"bear","color":"brown"},{"animal":"snake","color":"black"}]}'
     steps:
-      - name: do nothing
-        run: echo "jobs are required to do at least one thing"
+      - name: do one thing
+        run: echo "jobs are required to do at least one thing but this one is just for setting output"
   generate-output:
     runs-on: ubuntu-20.04
     needs: make-matrix
+    outputs:
+      all: ${{ toJson(steps.matrix-job.outputs.*) }}
     strategy:
       matrix: ${{ fromJson(needs.make-matrix.outputs.matrix)}}
     steps:
       - name: ${{ matrix.color }}-${{ matrix.animal }}
+        id: matrix-job
         run: |
-          set -x
           output="Look out, a ${{ matrix.color }} ${{ matrix.animal }}!"
-          echo "output_${{ matrix.color }}_${{ matrix.animal }}=${output}" >> $GITHUB_ENV
-          echo $GITHUB_ENV
-          cat $GITHUB_ENV
+          echo "::set-output name=${{ matrix.color }}-${{ matrix-animal }}::${output}"
   upsert-comment:
     runs-on: ubuntu-20.04
     needs: [make-matrix, generate-output]
@@ -43,10 +43,7 @@ jobs:
       - name: Build comment body
         id: comment-body
         run: |
-          set -x
           MATRIX='${{ needs.make-matrix.outputs.matrix }}'
-          echo $GITHUB_ENV
-          cat $GITHUB_ENV
           echo "$MATRIX" | scripts/get-output-variables.py
       - name: Post or update comment
         uses: peter-evans/create-or-update-comment@v1
@@ -62,5 +59,6 @@ jobs:
               ```
               Pull Request: ${{ steps.find_pr.outputs.pr }}
               Comment ID: ${{ steps.find_comment.outputs.comment-id }}
+              Output: ${{ needs.generate-output.outputs.all }}
               ```
             </details>
