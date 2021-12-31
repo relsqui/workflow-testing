@@ -39,7 +39,8 @@ jobs:
         id: find_pr
       - name: Download matrix outputs
         uses: actions/download-artifact@v2
-        path: outputs
+        with:
+          path: outputs
       - name: Build comment body
         id: comment-body
         run: |
