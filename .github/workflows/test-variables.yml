@@ -1,0 +1,17 @@
+---
+name: "Test Variables"
+
+on:
+  push
+
+env:
+  FOO: \bbar\b
+
+jobs:
+  make-links:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Print a variable
+        run: |
+          echo "${FOO}"
+          echo "barbarian" | sed 's/${FOO}//'
