@@ -6,6 +6,7 @@ on:
 
 env:
   FOO: \bbar\b
+  FOO_QUOTED: "\bbar\b"
 
 jobs:
   make-links:
@@ -13,6 +14,11 @@ jobs:
     steps:
       - name: Print a variable
         run: |
+          echo "unquoted:"
           echo "${FOO}"
           echo "barbarian" | sed "s/${FOO}//"
           echo "bar.bar.ian" | sed "s/${FOO}//"
+          echo "quoted:"
+          echo "${FOO_QUOTED}"
+          echo "barbarian" | sed "s/${FOO_QUOTED}//"
+          echo "bar.bar.ian" | sed "s/${FOO_QUOTED}//"
