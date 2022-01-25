@@ -15,3 +15,4 @@ jobs:
         run: |
           echo "${FOO}"
           echo "barbarian" | sed 's/${FOO}//'
+          echo "bar.bar.ian" | sed 's/${FOO}//'
