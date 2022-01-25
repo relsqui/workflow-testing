@@ -14,5 +14,5 @@ jobs:
       - name: Print a variable
         run: |
           echo "${FOO}"
-          echo "barbarian" | sed 's/${FOO}//'
-          echo "bar.bar.ian" | sed 's/${FOO}//'
+          echo "barbarian" | sed "s/${FOO}//"
+          echo "bar.bar.ian" | sed "s/${FOO}//"
