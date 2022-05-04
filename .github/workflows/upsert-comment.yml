@@ -1,0 +1,83 @@
+---
+name: "Upsert comment"
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  make-matrix:
+    runs-on: ubuntu-20.04
+    outputs:
+      matrix: '{"include":[{"animal":"bear","color":"black"},{"animal":"bear","color":"brown"},{"animal":"snake","color":"black"}]}'
+    steps:
+      - name: do one thing
+        run: echo "jobs are required to do at least one thing but this one is just for setting output"
+  generate-output:
+    runs-on: ubuntu-20.04
+    needs: make-matrix
+    strategy:
+      matrix: ${{ fromJson(needs.make-matrix.outputs.matrix)}}
+    steps:
+      - name: Generate output
+        run: |
+          output="Look out, a ${{ matrix.color }} ${{ matrix.animal }}!"
+          echo "$output" > ${{ matrix.color }}-${{ matrix.animal }}.out
+      - name: Upload output
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.color }}-${{ matrix.animal }}
+          path: ${{ matrix.color }}-${{ matrix.animal }}.out
+          retention-days: 1
+  upsert-comment:
+    runs-on: ubuntu-20.04
+    needs: [make-matrix, generate-output]
+    steps:
+      - uses: actions/checkout@v2
+      # if this workflow is triggered without a PR, it'll fail here and that's fine
+      - uses: jwalton/gh-find-current-pr@v1
+        id: find_pr
+      - name: Download matrix outputs
+        uses: actions/download-artifact@v2
+        with:
+          path: outputs
+      - name: Build comment body
+        id: comment-body
+        run: |
+          ls -lR
+          echo '${{ needs.make-matrix.outputs.matrix }}' | scripts/get-output-variables.py | while read job_name; do
+            # next step is to put this logic in the python script
+            echo "$job_name:" >> all_outputs
+            cat outputs/$job_name/$job_name.out >> all_outputs
+            echo >> all_outputs
+          done
+          comment_body=$(cat all_outputs)
+          comment_body="${comment_body//'%'/'%25'}"
+          comment_body="${comment_body//$'\n'/'%0A'}"
+          comment_body="${comment_body//$'\r'/'%0D'}"
+          echo "::set-output name=comment-body::${comment_body}"
+      - name: Check for existing comment
+        uses: peter-evans/find-comment@v1
+        id: find_comment
+        with:
+          issue-number: ${{ steps.find_pr.outputs.pr }}
+          comment-author: 'github-actions[bot]'
+          body-includes: <!-- Automatic Comment -->
+      - name: Post or update comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ steps.find_pr.outputs.pr }}
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            <!-- Automatic Comment -->
+            <details open>
+              <summary>Click for info about this automatic comment.</summary>
+
+              Pull Request: ${{ steps.find_pr.outputs.pr }}
+              Comment ID: ${{ steps.find_comment.outputs.comment-id }}
+              Output:
+              ```
+              ${{steps.comment-body.outputs.comment-body}}
+              ```
+            </details>
