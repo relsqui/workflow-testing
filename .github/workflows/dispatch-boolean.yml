@@ -12,6 +12,7 @@ env:
   BOX_TICKED = ${{ inputs.box_ticked && "yes" || "no" }}
 
 jobs:
-  steps:
+  check-box:
     runs-on: ubuntu-latest
-    run: echo "was the box ticked? ${BOX_TICKED}!"
+    steps:
+      - run: echo "was the box ticked? ${BOX_TICKED}!"
