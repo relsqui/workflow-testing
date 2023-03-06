@@ -15,4 +15,4 @@ jobs:
   check-box:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "was the box ticked? ${BOX_TICKED}!"
+      - run: echo "was the box ticked? ${BOX_TICKED}! (${{ inputs.box_ticked }})"
