@@ -1,0 +1,17 @@
+---
+name: "Test workflow dispatch boolean input"
+
+on:
+  workflow_dispatch:
+    inputs:
+      box_ticked:
+        description: "Did you tick the box?"
+        type: boolean
+
+env:
+  BOX_TICKED = ${{ inputs.box_ticked && "yes" || "no" }}
+
+jobs:
+  steps:
+    runs-on: ubuntu-latest
+    run: echo "was the box ticked? ${BOX_TICKED}!"
