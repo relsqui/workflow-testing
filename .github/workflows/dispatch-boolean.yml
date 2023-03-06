@@ -9,7 +9,7 @@ on:
         type: boolean
 
 env:
-  BOX_TICKED: ${{ inputs.box_ticked && "yes" || "no" }}
+  BOX_TICKED: ${{ inputs.box_ticked && 'yes' || 'no' }}
 
 jobs:
   check-box:
