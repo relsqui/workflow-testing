@@ -1,0 +1,21 @@
+name: Read a boolean input in a scheduled job
+
+on:
+  schedule:
+    - cron: '* * * * *'
+  workflow_dispatch:
+    inputs:
+      human:
+        description: Did a human start this workflow?
+        type: boolean
+        default: true
+
+jobs:
+  report-boolean:
+    name: Report boolean state
+    runs-on: ubuntu-latest
+    env:
+      BOOLEAN_STATE: ${{ !!(inputs.human) }}
+    steps:
+      - name: Output boolean
+        run: echo "'${BOOLEAN_STATE}'"
