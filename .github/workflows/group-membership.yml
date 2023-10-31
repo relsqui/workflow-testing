@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       team-slug:
-        description: team slug (get from url)
+        description: team slug (get from url of membership page)
 
 jobs:
   check-membership:
@@ -14,9 +14,7 @@ jobs:
     - id: get-all-members
       run: |
         echo "checking if ${{ github.actor }} is in ${TEAM_SLUG}"
-        members=$(gh api --paginate -X GET /orgs/$ORG_SLUG/teams/$TEAM_SLUG/members\?role=$ROLE | jq 'reduce inputs as $i (.; . += $i)|[.[].login]')
-        echo "$members" | jq -e 'any(. == "${{ github.actor }}")'
+        gh api --paginate -X GET /orgs/OpenSesame/teams/$TEAM_SLUG/members | jq -e 'any(.login == "${{ github.actor }}")'
       env:
-        ORG_SLUG: OpenSesame
         TEAM_SLUG: ${{ inputs.team-slug }}
         GH_TOKEN: ${{ secrets.ORG_READ_TOKEN }}
