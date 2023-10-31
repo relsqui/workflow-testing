@@ -13,8 +13,9 @@ jobs:
     steps:
     - id: get-all-members
       run: |
-        data=$(gh api --paginate -X GET /orgs/$ORG_SLUG/teams/$TEAM_SLUG/members\?role=$ROLE | jq 'reduce inputs as $i (.; . += $i)')
-        echo "$data" | jq
+        echo "checking if ${{ github.actor }} is in ${TEAM_SLUG}"
+        members=$(gh api --paginate -X GET /orgs/$ORG_SLUG/teams/$TEAM_SLUG/members\?role=$ROLE | jq 'reduce inputs as $i (.; . += $i)|[.[].login]')
+        echo "$members" | jq -e 'any(. == "${{ github.actor }}")'
       env:
         ORG_SLUG: OpenSesame
         TEAM_SLUG: ${{ inputs.team-slug }}
