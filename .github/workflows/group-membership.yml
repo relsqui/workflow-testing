@@ -14,6 +14,7 @@ jobs:
     - id: get-all-members
       run: |
         data=$(gh api --paginate -X GET /orgs/$ORG_SLUG/teams/$TEAM_SLUG/members\?role=$ROLE | jq 'reduce inputs as $i (.; . += $i)')
+        echo "$data" | jq
       env:
         ORG_SLUG: OpenSesame
         TEAM_SLUG: ${{ inputs.team-slug }}
