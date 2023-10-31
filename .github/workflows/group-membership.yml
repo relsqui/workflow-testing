@@ -1,5 +1,6 @@
 ---
 name: "Check group membership of workflow dispatcher"
+run-name: "Checking if ${{ github.actor }} is in ${{ inputs.team-slug }}"
 
 on:
   workflow_dispatch:
@@ -13,7 +14,6 @@ jobs:
     steps:
     - id: get-all-members
       run: |
-        echo "checking if ${{ github.actor }} is in ${TEAM_SLUG}"
         gh api --paginate -X GET /orgs/OpenSesame/teams/$TEAM_SLUG/members | jq -e 'any(.login == "${{ github.actor }}")'
       env:
         TEAM_SLUG: ${{ inputs.team-slug }}
