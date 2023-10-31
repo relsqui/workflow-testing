@@ -1,0 +1,25 @@
+---
+name: "Check group membership of workflow dispatcher"
+
+on:
+  workflow_dispatch:
+    inputs:
+      team-slug:
+        description: team slug (get from url)
+
+jobs:
+  check-membership:
+    runs-on: ubuntu-latest
+    steps:
+    - id: get-members
+      uses: GuillaumeFalourd/github-team-members@v1
+      with:
+        org_slug: OpenSesame
+        team_slug: ${{ inputs.team-slug }}
+        token: ${{ secrets.ORG_READ_TOKEN }}
+
+    - if: steps.get-members.outputs.actor-belongs-team == 'true'
+      run: echo "${{ github.actor }} belongs to Team"
+      
+    - if: steps.get-members.outputs.actor-belongs-team == 'false'
+      run: echo "${{ github.actor }} doesn't belong to Team" && false
