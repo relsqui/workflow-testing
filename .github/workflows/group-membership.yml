@@ -11,15 +11,17 @@ jobs:
   check-membership:
     runs-on: ubuntu-latest
     steps:
-    - id: get-members
-      uses: GuillaumeFalourd/github-team-members@v1
-      with:
-        org_slug: OpenSesame
-        team_slug: ${{ inputs.team-slug }}
-        token: ${{ secrets.ORG_READ_TOKEN }}
+    - id: get-all-members
+      run: |
+        data=$(gh api --paginate -X GET /orgs/$ORG_SLUG/teams/$TEAM_SLUG/members\?role=$ROLE | jq 'reduce inputs as $i (.; . += $i)')
+        # members=${{ join(fromJson(steps.get-members.outputs.data).*.login) }}
+      env:
+        ORG_SLUG: OpenSesame
+        TEAM_SLUG: ${{ inputs.team-slug }}
+        GH_TOKEN: ${{ secrets.ORG_READ_TOKEN }}
 
-    - if: steps.get-members.outputs.actor-belongs-team == 'true'
-      run: echo "${{ github.actor }} belongs to Team"
+    # - if: steps.get-members.outputs.actor-belongs-team == 'true'
+    #   run: echo "${{ github.actor }} belongs to Team"
       
-    - if: steps.get-members.outputs.actor-belongs-team == 'false'
-      run: echo "${{ github.actor }} doesn't belong to Team" && false
+    # - if: steps.get-members.outputs.actor-belongs-team == 'false'
+    #   run: echo "${{ github.actor }} doesn't belong to Team" && false
