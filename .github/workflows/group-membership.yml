@@ -15,7 +15,7 @@ jobs:
     - name: 'Ensure ${{ github.actor }} is in ${{ inputs.team-slug }}'
       id: get-all-members
       run: |
-        gh api --paginate -X GET /orgs/OpenSesame/teams/$TEAM_SLUG/members | jq -e 'any(.login == "${{ github.actor }}")'
+        gh api --paginate "/orgs/OpenSesame/teams/${TEAM_SLUG}/members" | jq -e 'any(.login == "${{ github.actor }}")'
       env:
         TEAM_SLUG: ${{ inputs.team-slug }}
         GH_TOKEN: ${{ secrets.ORG_READ_TOKEN }}
