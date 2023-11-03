@@ -18,3 +18,4 @@ jobs:
         org_slug: OpenSesame
         team_slug: ${{ inputs.team-slug }}
         token: ${{ secrets.ORG_READ_TOKEN }}
+    - run: echo "${{ steps.get-members.outputs }}" | jq
