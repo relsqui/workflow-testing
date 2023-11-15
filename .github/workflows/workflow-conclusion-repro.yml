@@ -40,8 +40,14 @@ jobs:
     needs: lots-of-jobs
     if: always()
     steps:
-      - uses: technote-space/workflow-conclusion-action@v3
-      # the matrix will always include a failure, so fail the workflow
-      # if the workflow conclusion action DOESN'T return failure
+      - id: get-conclusion
+        uses: relsqui/workflow-conclusion-action@false-positive-testing
+      - run: |
+          cat <<EOF > all-jobs.json
+            ${{ steps.get-conclusion.outputs.jobs }}
+          EOF
+      - uses: actions/upload-artifact@v3
+        with:
+          path: all-jobs.json
       - if: env.WORKFLOW_CONCLUSION != 'failure'
         run: exit 1
