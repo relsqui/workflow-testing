@@ -41,7 +41,7 @@ jobs:
     if: always()
     steps:
       - id: get-conclusion
-        uses: relsqui/workflow-conclusion-action@false-positive-testing
+        uses: relsqui/workflow-conclusion-action@6b4cbd00e65460025ad1086d004d91b9033a81ba
       - run: |
           cat <<EOF > all-jobs.json
             ${{ steps.get-conclusion.outputs.jobs }}
