@@ -16,7 +16,9 @@ jobs:
     steps:
       - id: make-matrix
         run: |
-          matrix=$(echo -n '{"index": ['; for x in $(seq ${{ inputs.job-count - 1 }}); do echo -n $x,; done; echo '${{ inputs.job-count }}]}')
+          seq_max=$(( ${{ inputs.job-count }} - 1 ))
+          matrix=$(echo -n '{"index": ['; for x in $(seq "$seq_max"); do echo -n $x,; done; echo '${{ inputs.job-count }}]}')
+          echo "$matrix"
           echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
   lots-of-jobs:
     runs-on: ubuntu-latest
@@ -25,7 +27,8 @@ jobs:
       matrix: ${{ fromJson(needs.make-matrix.outputs.matrix) }}
       fail-fast: false
     steps:
-      - run: |
+      - name: job ${{ matrix.index }}
+        run: |
           [ "${{ matrix.index }}" != "${{ inputs.job-count }}" ]
   get-conclusion:
     runs-on: ubuntu-latest
