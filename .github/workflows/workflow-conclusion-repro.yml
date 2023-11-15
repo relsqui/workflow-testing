@@ -41,13 +41,6 @@ jobs:
     if: always()
     steps:
       - id: get-conclusion
-        uses: relsqui/workflow-conclusion-action@6b4cbd00e65460025ad1086d004d91b9033a81ba
-      - run: |
-          cat <<EOF > all-jobs.json
-            ${{ steps.get-conclusion.outputs.jobs }}
-          EOF
-      - uses: actions/upload-artifact@v3
-        with:
-          path: all-jobs.json
+        uses: technote-space/workflow-conclusion-action@v3
       - if: env.WORKFLOW_CONCLUSION != 'failure'
         run: exit 1
