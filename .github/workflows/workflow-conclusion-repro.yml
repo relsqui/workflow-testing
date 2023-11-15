@@ -25,7 +25,6 @@ jobs:
     needs: make-matrix
     strategy:
       matrix: ${{ fromJson(needs.make-matrix.outputs.matrix) }}
-      fail-fast: false
     steps:
       - name: job ${{ matrix.index }}
         run: |
