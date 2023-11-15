@@ -1,5 +1,6 @@
 ---
 name: Get conclusion of a long workflow
+run-name: "Get conclusion of ${{ inputs.job-count }} jobs (FF: ${{ inputs.fail-fast }})"
 
 on:
   workflow_dispatch:
