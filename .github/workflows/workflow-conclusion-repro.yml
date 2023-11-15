@@ -13,12 +13,12 @@ jobs:
       - id: make-matrix
         run: |
           matrix=$(echo -n '{"index": ['; for x in $(seq 199); do echo -n $x,; done; echo '200]}')
-          echo "matrix='${matrix}'" >> "$GITHUB_OUTPUT"
+          echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
   lots-of-jobs:
     runs-on: ubuntu-latest
     needs: make-matrix
     strategy:
-      matrix: ${{ needs.make-matrix.outputs.matrix }}
+      matrix: ${{ fromJson(needs.make-matrix.outputs.matrix) }}
     steps:
       - run: |
           [ "${{ matrix.index }}" != "200" ]
