@@ -93,7 +93,7 @@ repos:
         name: bandit
 
   - repo: https://github.com/PyCQA/pylint
-    rev: v2.13.7
+    rev: v3.3.2
     hooks:
       - id: pylint
         name: pylint
