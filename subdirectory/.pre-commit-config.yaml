@@ -27,7 +27,7 @@ repos:
         name: editorconfig
 
   - repo: https://github.com/bridgecrewio/checkov
-    rev: 2.0.671
+    rev: 3.2.334
     hooks:
       - id: checkov
         name: checkov
