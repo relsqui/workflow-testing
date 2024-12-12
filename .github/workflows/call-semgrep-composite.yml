@@ -10,6 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: relsqui/docker-semgrep-test@2
+      - uses: relsqui/docker-semgrep-test@3
         with:
           semgrep-app-token: ${{ secrets.SEMGREP_APP_TOKEN }}
