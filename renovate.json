@@ -1,5 +1,7 @@
 {
-  "extends": ["config:base"],
+  "extends": [
+    "config:recommended"
+  ],
   "lockFileMaintenance": {
     "enabled": true
   },
@@ -8,21 +10,32 @@
   },
   "packageRules": [
     {
-      "matchPackagePatterns": ".*",
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "groupName": "all dependencies (non-major versions)",
-      "groupSlug": "all"
+      "groupSlug": "all",
+      "matchPackageNames": [
+        "/.*/"
+      ]
     },
     {
-      "matchManagers": ["pyenv"],
-      "matchUpdateTypes": ["minor"],
+      "matchManagers": [
+        "pyenv"
+      ],
+      "matchUpdateTypes": [
+        "minor"
+      ],
       "groupName": "python version (minor)"
     }
   ],
   "pin": {
     "enabled": false
   },
-  "schedule": ["before 3am on Monday"],
+  "schedule": [
+    "before 3am on Monday"
+  ],
   "separateMajorMinor": true,
   "timezone": "America/Los_Angeles"
 }
