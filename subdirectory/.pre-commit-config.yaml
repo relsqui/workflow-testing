@@ -99,7 +99,7 @@ repos:
         name: pylint
 
   - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
+    rev: 8.0.1
     hooks:
       - id: isort
         name: isort
